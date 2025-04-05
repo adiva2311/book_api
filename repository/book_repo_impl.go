@@ -51,6 +51,7 @@ func (repo *BookRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, bookId
 	if err != nil{
 		panic(err)
 	}
+	defer rows.Close()
 
 	book := domain.Book{}
 	if rows.Next(){
@@ -71,6 +72,7 @@ func (repo *BookRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) (_ []do
 	if err != nil{
 		panic(err)
 	}	
+	defer rows.Close()
 
 	var books []domain.Book
 	if rows.Next(){
