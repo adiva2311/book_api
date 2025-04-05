@@ -11,8 +11,12 @@ type BookRepositoryImpl struct {
 	
 }
 
+func NewBookControllerImpl() BookRepository {
+	return &BookRepositoryImpl{}
+}
+
 func (repo *BookRepositoryImpl) Create(ctx context.Context, tx *sql.Tx, book domain.Book) (_ domain.Book) {
-	query := "INSERT INTO book (title, category) VALUES (?, ?)"
+	query := "INSERT INTO books (title, category) VALUES (?, ?)"
 	result, err := tx.ExecContext(ctx, query, book.Title, book.Category)
 	if err != nil{
 		panic(err)
@@ -28,7 +32,7 @@ func (repo *BookRepositoryImpl) Create(ctx context.Context, tx *sql.Tx, book dom
 }
 
 func (repo *BookRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, book domain.Book) (_ domain.Book) {
-	query := "UPDATE book SET title = ?, category = ? WHERE id = ?"
+	query := "UPDATE books SET title = ?, category = ? WHERE id = ?"
 	_, err := tx.ExecContext(ctx, query, book.Title, book.Category, book.Id)
 	if err != nil{
 		panic(err)
@@ -38,7 +42,7 @@ func (repo *BookRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, book dom
 }
 
 func (repo *BookRepositoryImpl) Delete(ctx context.Context, tx *sql.Tx, book domain.Book) {
-	query := "DELETE FROM book WHERE id = ?"
+	query := "DELETE FROM books WHERE id = ?"
 	_, err := tx.ExecContext(ctx, query, book.Id)
 	if err != nil{
 		panic(err)
@@ -46,7 +50,7 @@ func (repo *BookRepositoryImpl) Delete(ctx context.Context, tx *sql.Tx, book dom
 }
 
 func (repo *BookRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, bookId int) (domain.Book, error) {
-	query := "SELECT FROM book WHERE id = ?"
+	query := "SELECT id, title, category FROM books WHERE id = ?"
 	rows, err := tx.QueryContext(ctx, query, bookId)
 	if err != nil{
 		panic(err)
@@ -67,7 +71,7 @@ func (repo *BookRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, bookId
 }
 
 func (repo *BookRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) (_ []domain.Book) {
-	query := "SELECT id, title, category FROM book"
+	query := "SELECT id, title, category FROM books"
 	rows, err := tx.QueryContext(ctx, query)
 	if err != nil{
 		panic(err)
@@ -75,7 +79,7 @@ func (repo *BookRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) (_ []do
 	defer rows.Close()
 
 	var books []domain.Book
-	if rows.Next(){
+	for rows.Next(){
 		book := domain.Book{}
 		err := rows.Scan(&book.Id, &book.Title, &book.Category)
 		if err != nil{

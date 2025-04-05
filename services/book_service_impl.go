@@ -7,14 +7,30 @@ import (
 	"book_api/repository"
 	"context"
 	"database/sql"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type BookServiceImpl struct {
 	BookRepo repository.BookRepository
 	DB *sql.DB
+	Validate *validator.Validate
+}
+
+func NewBookService(bookRepo repository.BookRepository, db *sql.DB, validate *validator.Validate) BookService {
+	return &BookServiceImpl{
+		BookRepo: bookRepo,
+		DB: db,
+		Validate: validate,
+	}
 }
 
 func (service *BookServiceImpl) Create(ctx context.Context, request web.BookCreateRequest) (_ web.BookResponse) {
+	err := service.Validate.Struct(request)
+	if err != nil{
+		panic(err)
+	}
+
 	tx, err := service.DB.Begin()
 	if err != nil{
 		panic(err)
@@ -33,6 +49,11 @@ func (service *BookServiceImpl) Create(ctx context.Context, request web.BookCrea
 }
 
 func (service *BookServiceImpl) Update(ctx context.Context, request web.BookUpdateRequest) (_ web.BookResponse) {
+	err := service.Validate.Struct(request)
+	if err != nil{
+		panic(err)
+	}
+
 	tx, err := service.DB.Begin()
 	if err != nil{
 		panic(err)
@@ -69,7 +90,7 @@ func (service *BookServiceImpl) Delete(ctx context.Context, bookId int) {
 	service.BookRepo.Delete(ctx, tx, book)
 }
 
-func (service *BookServiceImpl) FindById(ctx context.Context, bookId int) (_ web.BookResponse) {
+func (service *BookServiceImpl) FindById(ctx context.Context, bookId int) (web.BookResponse, error) {
 	tx, err := service.DB.Begin()
 	if err != nil{
 		panic(err)
@@ -81,10 +102,10 @@ func (service *BookServiceImpl) FindById(ctx context.Context, bookId int) (_ web
 		panic(err)
 	}
 
-	return helper.ToBookResponse(book)
+	return helper.ToBookResponse(book), nil
 }
 
-func (service *BookServiceImpl) FindAll(ctx context.Context) (_ []web.BookResponse) {
+func (service *BookServiceImpl) FindAll(ctx context.Context) []web.BookResponse {
 	tx, err := service.DB.Begin()
 	if err != nil{
 		panic(err)

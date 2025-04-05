@@ -1,7 +1,7 @@
 package web
 
 type BookResponse struct {
-	Id       int
+	Id       int 
 	Title    string
 	Category string
 }

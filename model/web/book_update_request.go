@@ -1,7 +1,7 @@
 package web
 
 type BookUpdateRequest struct {
-	Id       int
-	Title    string
-	Category string
+	Id       int    `validate:"required"`
+	Title    string `validate:"required"`
+	Category string `validate:"required"`
 }
