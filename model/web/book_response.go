@@ -1,7 +1,7 @@
 package web
 
 type BookResponse struct {
-	Id       int 
-	Title    string
-	Category string
+	Id       int    `json:"id"`
+	Title    string `json:"title"`
+	Category string `json:"category"`
 }

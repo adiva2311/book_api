@@ -23,8 +23,8 @@ func main() {
 	router := httprouter.New()
 
 	router.GET("/api/books", bookController.FindAll)
-	router.GET("/api/books/:bookId", bookController.FindById)
 	router.POST("/api/books", bookController.Create)
+	router.GET("/api/books/:bookId", bookController.FindById)
 	router.PUT("/api/books/:bookId", bookController.Update)
 	router.DELETE("/api/books/:bookId", bookController.Delete)
 
