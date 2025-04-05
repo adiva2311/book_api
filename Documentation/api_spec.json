@@ -1,0 +1,298 @@
+{
+	"openapi": "3.0.4",
+	"info": {
+		"title": "Books RESTful API",
+		"description": "API Spec for Books RESTful API",
+		"version": "1.0.0"
+	},
+	"servers": [
+		{
+			"url": "http://127.0.0.1:8080/api"
+		}
+	],
+	"paths": {
+		"/books": {
+			"get": {
+				"security": [{ "BookAuth": [] }],
+				"tags": ["Books API"],
+				"summary": "Get All List Books",
+				"description": "Get All List Books",
+				"responses": {
+					"200": {
+						"description": "Success Get All Books Data",
+						"content": {
+							"aplication/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"code": {
+											"type": "number",
+											"example": "200"
+										},
+										"status": {
+											"type": "string",
+											"example": "Success Get All Data"
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/Books"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"security": [{ "BookAuth": [] }],
+				"tags": ["Books API"],
+				"summary": "Create Book Data",
+				"description": "Create Book Data to Database",
+				"requestBody": {
+					"content": {
+						"aplication/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrUpdateBooks"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Success Create Books Data",
+						"content": {
+							"aplication/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"code": {
+											"type": "number",
+											"example": "200"
+										},
+										"status": {
+											"type": "string",
+											"example": "Success Create Data"
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/Books"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/books/{id}": {
+			"get": {
+				"security": [{ "BookAuth": [] }],
+				"tags": ["Books API"],
+				"summary": "Get Book by ID",
+				"description": "Get Book by ID",
+				"parameters": [
+					{
+						"name": "id",
+						"schema": {
+							"type": "number",
+							"example": 1
+						},
+						"in": "path",
+						"description": "Input ID for Get Data by ID",
+						"required": true
+					}
+				],
+				"requestBody": {
+					"content": {
+						"aplication/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"title": {
+										"type": "string",
+										"example": "Kembali Pulang"
+									},
+									"category": {
+										"type": "string",
+										"example": "novel"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Success Get Books Data by ID",
+						"content": {
+							"aplication/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"code": {
+											"type": "number",
+											"example": "200"
+										},
+										"status": {
+											"type": "string",
+											"example": "Success Get Data by ID"
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/Books"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"security": [{ "BookAuth": [] }],
+				"tags": ["Books API"],
+				"summary": "Update Book by ID",
+				"description": "Update Book by ID",
+				"parameters": [
+					{
+						"name": "id",
+						"schema": {
+							"type": "number",
+							"example": 1
+						},
+						"in": "path",
+						"description": "Input ID for Get Data by ID",
+						"required": true
+					}
+				],
+				"requestBody": {
+					"content": {
+						"aplication/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrUpdateBooks"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Success Update Books Data by ID",
+						"content": {
+							"aplication/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"code": {
+											"type": "number",
+											"example": "200"
+										},
+										"status": {
+											"type": "string",
+											"example": "Success Update Data by ID"
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/Books"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"security": [{ "BookAuth": [] }],
+				"tags": ["Books API"],
+				"summary": "Delete Book Data by ID",
+				"description": "Delete Book Data by ID",
+				"parameters": [
+					{
+						"name": "id",
+						"schema": {
+							"type": "number",
+							"example": 1
+						},
+						"in": "path",
+						"description": "Input ID for Delete Data by ID",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success Delete Book Data by ID",
+						"content": {
+							"aplication/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"code": {
+											"type": "number",
+											"example": "200"
+										},
+										"status": {
+											"type": "string",
+											"example": "Success Delete Data by ID"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"securitySchemes": {
+			"BookAuth": {
+				"type": "apiKey",
+				"in": "header",
+				"name": "X-API-Key",
+				"description": "Authentication for Book API"
+			}
+		},
+		"schemas": {
+			"CreateOrUpdateBooks": {
+				"type": "object",
+				"properties": {
+					"title": {
+						"type": "string",
+						"example": "Kembali Pulang"
+					},
+					"category": {
+						"type": "string",
+						"example": "novel"
+					}
+				}
+			},
+			"Books": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "number",
+						"example": "1"
+					},
+					"title": {
+						"type": "string",
+						"example": "Kembali Pulang"
+					},
+					"category": {
+						"type": "string",
+						"example": "novel"
+					}
+				}
+			}
+		}
+	}
+}
